@@ -1,20 +1,33 @@
 <?php
 
-$username = $_POST['username'];
-$password = $_POST['password'];
-$email = $_POST['email'];
+session_start();
+header('location:login.html');
 
-$conn = new mysqli('localhost','root','','user');
-if($conn->connect_error){
-    die('Connection Failed : '.$conn->connect_error);
+$con = mysqli_connect('localhost','root');
+if($con){
+    echo "Connection successful";
 }else{
-    $stmt = $conn->prepare("insert into test(username, password, email) values(?,?,?)");
-    $stmt->bind_param("sss",$username,$password,$email);
-    $stmt->execute();
-    echo "Registration Successful!";
-    $stmt->close();
-    $conn->close();
+    echo "No Connection";
 }
+
+mysqli_select_db($con,'sessionpractical');
+
+$name = $_POST['username'];
+$pass = $_POST['password'];
+
+$q = " select * from signin where name = '$name' && password = '$pass'";
+
+$result = mysqli_query($con, $q);
+
+$num = mysqli_num_rows($result);
+
+if($num==1){
+    echo "Username already exist!!";
+}else{
+    $qy = " insert into signin(name, password) values('$name','$pass')";
+    mysqli_query($con,$qy);
+}
+
 
 
 ?>
