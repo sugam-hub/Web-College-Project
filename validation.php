@@ -1,32 +1,23 @@
 <?php
-
+include('database.php');
 session_start();
 
-$con = mysqli_connect('localhost','root');
-if($con){
-    echo "Connection successful";
-}else{
-    echo "No Connection";
+global $conn;
+
+if(isset($_POST['loginBtn'])){
+    $name = $_POST['username'];
+    $pass = $_POST['password'];
+
+    $q = " select * from users where name = '$name' and pass = '$pass'";
+
+    $result = mysqli_query($conn, $q);
+
+    $num = mysqli_num_rows($result);
+
+    if($num==1){
+        $_SESSION['username'] = $name;
+        header('location: ./airports.html');
+    }else{
+        header('location: ./login.html');
+    }
 }
-
-mysqli_select_db($con,'sessionpractical');
-
-$name = $_POST['username'];
-$pass = $_POST['password'];
-
-$q = " select * from signin where name = '$name' && password = '$pass'";
-
-$result = mysqli_query($con, $q);
-
-$num = mysqli_num_rows($result);
-
-if($num==1){
-    $_SESSION['username'] = $name;
-    header('location:home.html');
-}else{
-    header('location:login.html');
-}
-
-
-
-?>
